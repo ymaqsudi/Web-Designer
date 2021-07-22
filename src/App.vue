@@ -14,7 +14,7 @@
 				Issues
 			</v-btn>
 
-      <v-btn icon fab class="ml-12">
+			<v-btn icon fab class="ml-12">
 				<v-icon>mdi-file-plus-outline</v-icon>
 				Projects
 			</v-btn>
@@ -49,6 +49,32 @@
 		<!-- LEFT PANNEL -->
 
 		<v-navigation-drawer v-model="drawer" app>
+			<v-list-item>
+				<v-list-item-content>
+					<v-list-item-title class="text-h6">
+						<v-icon>mdi-cube-outline</v-icon>
+						<strong>Prodeo Designer</strong>
+					</v-list-item-title>
+					<v-list-item-subtitle> </v-list-item-subtitle>
+				</v-list-item-content>
+			</v-list-item>
+
+			<v-divider></v-divider>
+
+			<v-list dense nav>
+				<v-list-item>
+					<v-list-item-content>
+						<v-btn>
+							Dashboard
+							<v-icon> mdi-home </v-icon>
+						</v-btn>
+					</v-list-item-content>
+				</v-list-item>
+			</v-list>
+		</v-navigation-drawer>
+
+		<!-- Right Pannel -->
+		<v-navigation-drawer v-model="cat" right app>
 			<v-list-item>
 				<v-list-item-content>
 					<v-list-item-title class="text-h6">
@@ -116,7 +142,7 @@
 
 					<!--Open Settings Button-->
 					<div class="text-right">
-						<v-btn color="#585858" fab small dark>
+						<v-btn color="#585858" fab small dark @click="cat = !cat">
 							<v-icon>mdi-cog-outline</v-icon>
 						</v-btn>
 					</div>
@@ -137,9 +163,7 @@
 				</v-speed-dial>
 			</v-container>
 
-			<v-bottom-navigation
-				app
-			>
+			<v-bottom-navigation app>
 				<v-btn style="font-size:36px"> Prodeo Designer </v-btn>
 			</v-bottom-navigation>
 		</v-main>
@@ -152,7 +176,8 @@ export default {
 		return: {
 			dialog: false,
 		},
-		drawer: null,
+		drawer: true,
+		cat: true,
 		items: [
 			{ title: "Home", icon: "mdi-home-city" },
 			{ title: "My Account", icon: "mdi-account" },
