@@ -1,7 +1,7 @@
 <template>
 	<v-app id="inspire">
 		<!-- APP BAR -->
-		<v-app-bar color="primary" dense dark clipped-right app>
+		<v-app-bar color="primary" dense dark clipped-right app v-model="appBar">
 			<v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
 			<v-btn icon fab>
@@ -47,7 +47,7 @@
 
 		<!-- LEFT PANNEL -->
 
-		<v-navigation-drawer v-model="drawer" app>
+		<v-navigation-drawer v-model="drawer" app color="blue">
 			<v-list-item>
 				<v-list-item-content>
 					<v-list-item-title class="text-h6">
@@ -82,7 +82,10 @@
 					</v-list-item-title>
 					<v-list-item-subtitle> </v-list-item-subtitle>
 				</v-list-item-content>
+        <v-icon @click="cat = !cat" right color='blue'>mdi-check-bold</v-icon>
+        <v-icon @click="cat = !cat" right color="red">mdi-close</v-icon>
 			</v-list-item>
+      
 
 			<v-divider></v-divider>
 
@@ -97,7 +100,7 @@
 					<v-expansion-panel-content>
 						<!--Application Name Text Field -->
 						<span><strong>Application Name</strong></span>
-						<v-text-field placeholder="Prodeo Designer" outlined></v-text-field>
+						<v-text-field placeholder="Prodeo Designer" outlined v-model="title"></v-text-field>
 						<!--Select Field Router Animation -->
 						<span><strong>Router Animation</strong></span>
 						<v-select :items="routerAnimationItems" outlined></v-select>
@@ -123,7 +126,7 @@
 							<v-radio label="Air (Source Sans Font)" value="radio-3"></v-radio>
 						</v-radio-group>
 						<!-- Various Switch Buttons-->
-						<v-switch v-model="switch1" inset label="Dark Theme"></v-switch>
+						<v-switch v-model="switch1" inset label="Dark Theme" @click='darkMode'></v-switch>
 						<v-switch
 							v-model="switch2"
 							inset
@@ -178,13 +181,13 @@
 						<span
 							><strong>Menu Color<br /></strong
 						></span>
-						<v-btn x-small icon outlined
+						<v-btn x-small icon outlined 
 							><v-icon>mdi-circl-outline</v-icon></v-btn
 						>
-						<v-btn x-small icon outlined class="gray--text"
+						<v-btn x-small icon outlined class="gray--text" 
 							><v-icon>mdi-circle</v-icon></v-btn
 						>
-						<v-btn x-small icon outlined class="black--text"
+						<v-btn x-small icon outlined class="black--text" 
 							><v-icon>mdi-circle</v-icon></v-btn
 						><br />
 						<span
@@ -210,9 +213,10 @@
 					<v-expansion-panel-content>
 						<!-- CHOOSE TOPBAR VARIANT RADIO BUTTON -->
 						<span><strong>Topbar Variant</strong></span>
-						<v-radio-group v-model="row" row>
-							<v-radio label="Variant 1" value="radio-1"></v-radio>
-							<v-radio label="None" value="radio-2"></v-radio>
+						<v-radio-group v-model="row" row mandatory>
+							<v-radio label="Variant 1" value="radio-1" @change="appBar = !appBar"></v-radio>
+							<v-radio label="None" value="radioNone" @change="appBar = !appBar"></v-radio>
+            
 						</v-radio-group>
 
 						<!-- TOPBAR SEPARATED SWITCH -->
@@ -222,6 +226,7 @@
 							color="red"
 							value="red"
 							hide-details
+              inset
 						></v-switch>
 
 						<!-- TOPBAR FIXED SWITCH -->
@@ -231,6 +236,7 @@
 							color="red"
 							value="red"
 							hide-details
+              inset
 						></v-switch>
 
 						<!-- TOPBAR GRAY BG SWITCH -->
@@ -240,6 +246,7 @@
 							color="red"
 							value="red"
 							hide-details
+              inset
 						></v-switch>
 					</v-expansion-panel-content>
 				</v-expansion-panel>
@@ -347,6 +354,8 @@
 			<v-bottom-navigation app>
 				<v-btn style="font-size:36px"> {{ title }} </v-btn>
 			</v-bottom-navigation>
+
+      <!-- FOOTER -->
 		</v-main>
 	</v-app>
 </template>
@@ -357,9 +366,13 @@ export default {
 		return: {
 			title: "",
 			dialog: false,
+      color: 'black',
 		},
+    routerAnimationItems: ['None', 'Slide Up', 'Slide Right', 'Fade In', 'Zoom'],
+    Internationalization: ['English (en-US)','French (fr-FR)','Русский (ru-RU)','简体中文 (zh-CN)'],
 		drawer: true,
 		cat: false,
+    appBar: true,
 
 		items: [
 			{ title: "Home", icon: "mdi-home-city" },
