@@ -1,151 +1,19 @@
 <template>
   <v-app id="inspire">
-    <!-- APP BAR -->
-    <v-app-bar color="primary" dense dark clipped-right app v-model="appBar">
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-
-      <v-btn icon fab>
-        <v-icon>mdi-star</v-icon>
-      </v-btn>
-
-      <v-btn icon fab class="ml-9">
-        <v-icon left>mdi-folder</v-icon>
-        <span>Issues</span>
-      </v-btn>
-
-      <v-btn icon fab class="ml-15">
-        <v-icon left>mdi-file-plus-outline</v-icon>
-        Projects
-      </v-btn>
-
-      <v-text-field
-        class="closed mt-7 ml-8"
-        placeholder="Search"
-        filled
-        dense
-        prepend-inner-icon="mdi-magnify"
-      ></v-text-field>
-
-      <v-spacer></v-spacer>
-
-      <v-btn icon fab>
-        <v-icon>mdi-flag-variant</v-icon>
-      </v-btn>
-
-      <v-btn icon fab>
-        <v-icon>mdi-cart</v-icon>
-      </v-btn>
-
-      <v-btn icon fab>
-        <v-icon>mdi-bell</v-icon>
-      </v-btn>
-
-      <v-btn icon fab>
-        <v-icon>mdi-account</v-icon>
-      </v-btn>
-    </v-app-bar>
+    <!-- TOP BAR -->
+    <TopBar v-show="TopBar"></TopBar>
 
     <!-- FOOTER 1 -->
-    <v-footer dark padless app v-show="bottomBar">
-      <v-card class="flex" flat tile>
-        <v-card-title class="teal">
-          <strong class="subheading">{{ title }}</strong>
-
-          <v-spacer></v-spacer>
-
-          <v-btn v-for="icon in icons" :key="icon" class="mx-4" dark icon>
-            <v-icon size="24px">
-              {{ icon }}
-            </v-icon>
-          </v-btn>
-        </v-card-title>
-
-        <v-card-text class="py-2 white--text text-center">
-          {{ new Date().getFullYear() }} — <strong>{{ title }}</strong>
-        </v-card-text>
-      </v-card>
-    </v-footer>
+    <BottomBar v-show="BottomBar"></BottomBar>
 
     <!-- FOOTER 2 -->
-    <v-footer color="primary lighten-1" padless v-show="bottomBar2" app>
-      <v-row justify="center" no-gutters>
-        <v-btn
-          v-for="link in links"
-          :key="link"
-          color="white"
-          text
-          rounded
-          class="my-2"
-        >
-          {{ link }}
-        </v-btn>
-        <v-col class="primary lighten-2 py-4 text-center white--text" cols="12">
-          {{ new Date().getFullYear() }} — <strong>{{ title }}</strong>
-        </v-col>
-      </v-row>
-    </v-footer>
+    <BottomBar2 v-show="BottomBar2"></BottomBar2>
 
     <!-- FOOTER 3 -->
-    <v-footer dark padless v-show="bottom3" app>
-      <v-card flat tile class="indigo lighten-1 white--text text-center">
-        <v-card-text>
-          <v-btn
-            v-for="icon in icons"
-            :key="icon"
-            class="mx-4 white--text"
-            icon
-          >
-            <v-icon size="24px">
-              {{ icon }}
-            </v-icon>
-          </v-btn>
-        </v-card-text>
-
-        <v-card-text class="white--text pt-0">
-          Phasellus feugiat arcu sapien, et iaculis ipsum elementum sit amet.
-          Mauris cursus commodo interdum. Praesent ut risus eget metus luctus
-          accumsan id ultrices nunc. Sed at orci sed massa consectetur dignissim
-          a sit amet dui. Duis commodo vitae velit et faucibus. Morbi vehicula
-          lacinia malesuada. Nulla placerat augue vel ipsum ultrices, cursus
-          iaculis dui sollicitudin. Vestibulum eu ipsum vel diam elementum
-          tempor vel ut orci. Orci varius natoque penatibus et magnis dis
-          parturient montes, nascetur ridiculus mus.
-        </v-card-text>
-
-        <v-divider></v-divider>
-
-        <v-card-text class="white--text">
-          {{ new Date().getFullYear() }} — <strong>{{ title }}</strong>
-        </v-card-text>
-      </v-card>
-    </v-footer>
-
-    <!-- LEFT PANNEL -->
-
-    <v-navigation-drawer v-model="drawer" app :color="menuColor">
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title class="text-h6">
-            <v-icon>mdi-cube-outline</v-icon>
-            <strong>{{ title }}</strong>
-          </v-list-item-title>
-          <v-list-item-subtitle> </v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-
-      <v-divider></v-divider>
-
-      <v-list dense nav>
-        <v-list-item>
-          <v-list-item-content>
-            <v-btn>
-              Dashboard
-              <v-icon> mdi-home </v-icon>
-            </v-btn>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
+    <BottomBar3 v-show="BottomBar3"></BottomBar3>
+    
+    <!-- Left Drawer -->
+    <LeftDrawer v-model="LeftDrawer"> </LeftDrawer>
 
     <!-- RIGHT PANNEL -->
     <v-navigation-drawer v-model="cat" clipped right disable-route-watcher app>
@@ -295,7 +163,14 @@
             <v-switch v-model="switch12" inset label=""></v-switch>
             <span><strong>Menu Width</strong></span>
             <!--Slider Shit :P -->
-            <v-slider max="330" min="256"> </v-slider>
+            <v-slider
+              v-model="menuWidth"
+              :tick-labels="ticksLabels"
+              max="330"
+              min="0"
+              @change="menuWidth = ticksLabels[value]"
+            >
+            </v-slider>
           </v-expansion-panel-content>
         </v-expansion-panel>
 
@@ -310,12 +185,12 @@
               <v-radio
                 label="Variant 1"
                 value="radio-1"
-                @change="appBar = !appBar"
+                @change="TopBar = true"
               ></v-radio>
               <v-radio
                 label="None"
                 value="radioNone"
-                @change="appBar = !appBar"
+                @change="TopBar = false"
               ></v-radio>
             </v-radio-group>
 
@@ -378,26 +253,27 @@
                 label="Variant 1"
                 value="radio-1"
                 @change="
-                  bottomBar = true;
-                  bottomBar2 = false;
+                  BottomBar = true;
+                  BottomBar2 = false;
+                  BottomBar3 = false;
                 "
               ></v-radio>
               <v-radio
                 label="Variant 2"
                 value="radio-2"
                 @change="
-                  bottomBar = false;
-                  bottomBar2 = true;
-                  bottomBar3 = false;
+                  BottomBar = false;
+                  BottomBar2 = true;
+                  BottomBar3 = false;
                 "
               ></v-radio>
               <v-radio
                 label="Variant 3"
                 value="radio-3"
                 @change="
-                  bottomBar = false;
-                  bottomBar2 = false;
-                  bottomBar3 = true;
+                  BottomBar = false;
+                  BottomBar2 = false;
+                  BottomBar3 = true;
                 "
               ></v-radio>
               <v-radio label="Variant 4" value="radio-4"></v-radio>
@@ -405,9 +281,9 @@
                 label="None"
                 value="radio-5"
                 @click="
-                  bottomBar = false;
-                  bottomBar2 = false;
-                  bottomBar3 = false;
+                  BottomBar = false;
+                  BottomBar2 = false;
+                  BottomBar3 = false;
                 "
               ></v-radio>
             </v-radio-group>
@@ -480,13 +356,23 @@
 </template>
 
 <script>
+import TopBar from "./components/TopBar";
+
+import BottomBar from "./components/BottomBar.vue";
+import BottomBar2 from "./components/BottomBar2.vue";
+import BottomBar3 from "./components/BottomBar3.vue";
+
+import LeftDrawer from "./components/LeftDrawer.vue";
+
 export default {
+  components: { TopBar, BottomBar, BottomBar2, BottomBar3, LeftDrawer },
   data: () => ({
     return: {
       title: "",
       dialog: false,
       color: "black",
     },
+
     routerAnimationItems: [
       "None",
       "Slide Up",
@@ -502,18 +388,12 @@ export default {
     ],
 
     menuColor: "blue",
-    drawer: true,
+    menuWidth: 256,
     cat: false,
-    appBar: true,
-    bottomBar: true,
-    bottomBar2: false,
-    bottomBar3: false,
-
-    items: [
-      { title: "Home", icon: "mdi-home-city" },
-      { title: "My Account", icon: "mdi-account" },
-      { title: "Users", icon: "mdi-account-group-outline" },
-    ],
+    BottomBar: true,
+    BottomBar2: false,
+    BottomBar3: false,
+    TopBar: true,
     mini: true,
   }),
   methods: {
