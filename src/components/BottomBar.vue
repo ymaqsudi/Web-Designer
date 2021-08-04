@@ -1,20 +1,32 @@
 <template>
-	<v-footer dark padless app v-show="BottomBar">
-      <v-card class="flex" flat tile>
-        <v-card-title class="teal">
-          <strong class="subheading">{{ title }}</strong>
-
-          <v-spacer></v-spacer>
-
-          <v-btn v-for="icon in icons" :key="icon" class="mx-4" dark icon>
+	<v-footer
+      v-bind="localAttrs"
+      :padless="padless"
+      absolute
+    >
+      <v-card
+        flat
+        tile
+        width="100%"
+        class="red lighten-1 text-center"
+      >
+        <v-card-text>
+          <v-btn
+            v-for="icon in icons"
+            :key="icon"
+            class="mx-4"
+            icon
+          >
             <v-icon size="24px">
               {{ icon }}
             </v-icon>
           </v-btn>
-        </v-card-title>
+        </v-card-text>
 
-        <v-card-text class="py-2 white--text text-center">
-          {{ new Date().getFullYear() }} — <strong>{{ title }}</strong>
+        <v-divider></v-divider>
+
+        <v-card-text class="white--text">
+          {{ new Date().getFullYear() }} — <strong>{{$store.state.title}}</strong>
         </v-card-text>
       </v-card>
     </v-footer>
@@ -25,7 +37,8 @@
 export default {
   data() {
     return {
-      BottomBar: true,
+      BottomBar1: true,
+      title: "",
     }
   }
 }
